@@ -1,6 +1,6 @@
 function HopfBifurcation_sir()
     % Parameters
-    beta = 0.25;     % Transmission rate
+    beta = 0.3;     % Transmission rate
     gamma = 0.1;    % Recovery rate
     mu = 0.05;      % Natural birth/death rate
     nu = 0.005;     % Rate of loss of immunity
@@ -12,7 +12,7 @@ function HopfBifurcation_sir()
     % Initial conditions
     S0 = 0.9;   % Initial proportion of susceptible individuals
     I0 = 0.1;   % Initial proportion of infectious individuals
-    R0 = 0.0;   % Initial proportion of recovered/immune individuals
+    R0 = 0.0001;   % Initial proportion of recovered/immune individuals
 
     % ODE solver options
     options = odeset('RelTol', 1e-6, 'AbsTol', 1e-6);
@@ -26,12 +26,20 @@ function HopfBifurcation_sir()
     R = sol(:, 3);
 
     % Plot the results
-    figure;
+    figure(1);clf
+    
     plot(t, I, 'b-', 'LineWidth', 2);
-    xlabel('Time (days)');
-    ylabel('Proportion of Infectious Individuals');
-    title('Hopf Bifurcation for Measles');
+    xlabel('Time (days)','Interpreter','latex');
+    ylabel('Proportion of Infectious Individuals','Interpreter','latex');
+    title('Hopf Bifurcation for Measles','Interpreter','latex');
+
+    figure(2);clf
+    plot(I,S, 'LineWidth', 2)
+    xlabel('$I$','Interpreter','latex');
+    ylabel('$S$','Interpreter','latex');
     grid on;
+
+    
 end
 
 function dydt = sir_model(~, y, beta, gamma, mu, nu)
@@ -40,9 +48,9 @@ function dydt = sir_model(~, y, beta, gamma, mu, nu)
     R = y(3);
 
     % System of differential equations
-    dSdt = mu - beta * S * I - mu * S;
-    dIdt = beta * S * I - (gamma + mu + nu) * I;
-    dRdt = gamma * I - mu * R + nu * I;
+    dSdt = mu - beta*S*I - mu*S;
+    dIdt = beta*S*I - (gamma + mu + nu)*I;
+    dRdt = gamma*I - mu*R + nu*I;
 
     dydt = [dSdt; dIdt; dRdt];
 end
